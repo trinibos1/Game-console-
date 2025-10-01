@@ -1,0 +1,8 @@
+{
+  "id": "demo_game",
+  "name": "Demo Game",
+  "icon": "🎮",
+  "description": "A demo game for testing",
+  "executable": "start.sh",
+  "version": "1.0"
+}

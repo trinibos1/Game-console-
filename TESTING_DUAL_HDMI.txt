@@ -1,0 +1,99 @@
+======================================================
+TESTING WITH DUAL HDMI DISPLAYS ON RASPBERRY PI 4
+======================================================
+
+While waiting for your actual hardware (Waveshare HDMI LCD + Adafruit SPI TFT),
+you can test the UI using 2 HDMI displays connected to your Raspberry Pi 4.
+
+HARDWARE SETUP:
+---------------
+1. Connect Display 1 (main monitor) to HDMI 0 port
+2. Connect Display 2 (secondary monitor) to HDMI 1 port
+3. Both displays should be recognized by Raspberry Pi OS
+
+CONFIGURE DUAL HDMI MODE:
+--------------------------
+Edit config/gpio_pins.py and set:
+
+    TESTING_MODE = {
+        'DUAL_HDMI': True,           # Enable dual HDMI testing mode
+        'HDMI_0_RESOLUTION': (800, 480),   # Match your Display 1 resolution
+        'HDMI_1_RESOLUTION': (320, 240),   # Match your Display 2 resolution
+    }
+
+RASPBERRY PI 4 DISPLAY CONFIGURATION:
+-------------------------------------
+1. Edit /boot/config.txt:
+
+    # Enable both HDMI outputs
+    hdmi_force_hotplug:0=1
+    hdmi_force_hotplug:1=1
+    
+    # Set resolutions for each display
+    hdmi_group:0=2
+    hdmi_mode:0=87
+    hdmi_cvt:0=800 480 60 6 0 0 0
+    
+    hdmi_group:1=2
+    hdmi_mode:1=87
+    hdmi_cvt:1=320 240 60 6 0 0 0
+
+2. Reboot: sudo reboot
+
+DISPLAY ARRANGEMENT:
+--------------------
+After reboot, configure display arrangement:
+
+    # Check displays
+    xrandr --listmonitors
+    
+    # Arrange displays (example - adjust based on your output names)
+    xrandr --output HDMI-1 --mode 800x480 --pos 0x0
+    xrandr --output HDMI-2 --mode 320x240 --pos 0x480
+
+RUNNING THE SYSTEM:
+-------------------
+1. Start the Gaming System:
+   python main.py
+
+2. The top screen content will appear on Display 1 (HDMI 0)
+3. The bottom screen content will appear on Display 2 (HDMI 1)
+
+TESTING TOUCH INPUT:
+--------------------
+Since you won't have actual touchscreen on HDMI displays:
+- Use mouse clicks to simulate touch input on Display 2
+- Test by clicking on app icons in the bottom screen grid
+- Verify touch coordinate alignment is correct
+
+WHEN ACTUAL HARDWARE ARRIVES:
+------------------------------
+1. Set TESTING_MODE['DUAL_HDMI'] = False in config/gpio_pins.py
+2. The system will automatically use the configured hardware:
+   - Top: Waveshare 5" HDMI LCD (800×480) on HDMI
+   - Bottom: Adafruit 3.2" SPI TFT (320×240, ILI9341) on SPI
+
+3. Install Python libraries for SPI TFT:
+   sudo pip3 install adafruit-circuitpython-rgb-display
+
+4. Configure SPI interface:
+   sudo raspi-config -> Interface Options -> SPI -> Enable
+
+TIPS:
+-----
+- Keep both displays side-by-side for easy testing
+- Use wireless keyboard/mouse for easier testing
+- Test all button mappings with keyboard keys
+- Verify app launching works correctly
+- Check status bar indicators update properly
+
+TROUBLESHOOTING:
+----------------
+If displays don't show up:
+1. Check HDMI cable connections
+2. Verify /boot/config.txt settings
+3. Run: tvservice -l (list displays)
+4. Run: vcgencmd get_config hdmi_mode:0
+5. Check: dmesg | grep -i hdmi
+
+For help, check: https://www.raspberrypi.com/documentation/computers/configuration.html
