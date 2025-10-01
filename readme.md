@@ -3,7 +3,7 @@
 ## Project Overview
 A complete gaming system UI built in Python/Pygame that mimics the Nintendo 3DS dual-screen interface. Designed to run on Raspberry Pi OS Lite with custom hardware (dual screens, buttons, joysticks, touchscreen).
 
-## Current Status - First Version Complete ⚠️
+## Current Status - First Version in development ⚠️
 
 ### ✅ Fully Working Features
 - **Dual-Screen Layout**: Top screen (800x480) for content preview, bottom screen (320x240 touchscreen) for controls
